@@ -1,1 +1,1 @@
-recursive-include runscope/resources *
+recursive-include runscope/resources/api_description *

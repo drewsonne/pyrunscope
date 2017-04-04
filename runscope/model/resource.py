@@ -1,5 +1,6 @@
 import json
 
+import datetime
 from restkit import Resource
 
 import runscope
@@ -75,6 +76,9 @@ class RunScopeResource(Resource):
         raw_response = self.get(self.resource_path)
         self._data = raw_response['data']
 
+    def _cast_to_datetime(self, value):
+        return datetime.datetime.fromtimestamp(value)
+
 
     def keys(self):
         """
@@ -88,6 +92,8 @@ class RunScopeResource(Resource):
         Implemented to allow casting to a `dict`
         :return:
         """
+        if hasattr(self, key):
+            return getattr(self, key)
         return self._data[key]
 
 

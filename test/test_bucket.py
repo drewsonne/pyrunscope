@@ -31,5 +31,5 @@ class TestRSBucket(TestCase):
             print "Found Bucket: {name}".format(name=bucket.name)
             for test in bucket.tests.all():
                 for result in test.results.all():
-                    print json.dumps(dict(result), indent=4)
-                    exit(0)
+                    print result.finished_at
+                    print json.dumps(dict(result), indent=4, default=str)

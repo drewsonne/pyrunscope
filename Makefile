@@ -1,5 +1,5 @@
-install: clean
-	pip install -e .
+install: clean build
+	pip install dist/pyrunscope*.whl
 
 build:
 	python setup.py sdist bdist_wheel

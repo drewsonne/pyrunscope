@@ -8,5 +8,15 @@
     {
       "name": "region"
     }
+  ],
+  "fields": [
+    {
+      "name": "finished_at",
+      "type": "datetime"
+    },
+    {
+      "name": "started_at",
+      "type": "datetime"
+    }
   ]
 }

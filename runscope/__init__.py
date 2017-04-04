@@ -1,3 +1,5 @@
+import os
+
 from runscope.admin import Admin
 import importlib
 
@@ -35,13 +37,29 @@ def _build_class_attributes(resource_name):
     if 'has_many' in resource_model:
         _build_collection_attributes(attrs, resource_model['has_many'])
 
+    if 'fields' in resource_model:
+        _build_field_getters(attrs, resource_model['fields'])
+
     _build_metadata_attributes(attrs, resource_model)
     attrs['_is_collection'] = False
 
     return attrs
 
-def _build_metadata_attributes(attributes, resource_model):
 
+def _build_field_getters(attributes, fields_model):
+    for field in fields_model:
+        attributes[field['name']] = _build_field_getter(field)
+
+
+def _build_field_getter(field_model):
+    field_name = field_model['name']
+    field_type = field_model['type']
+    method_name = "_cast_to_" + field_type
+
+    return property(lambda self: getattr(self, method_name)(self._data[field_name]))
+
+
+def _build_metadata_attributes(attributes, resource_model):
     if '_id_key' not in resource_model:
         raise RuntimeError("Could not find '_id_key' in {resource_model}".format(
             resource_model=resource_model
@@ -78,9 +96,17 @@ def _build_collection_attr(name, config):
 
 def set_defaults(**kwargs):
     global DEFAULTS
-    DEFAULTS = kwargs
+    DEFAULTS.update(kwargs)
 
 
 def get_defaults():
     global DEFAULTS
     return DEFAULTS
+
+
+if __name__ == 'runscope':
+    # If environment variables have been provided, use them
+    if 'RS_ACCESS_TOKEN' in os.environ:
+        set_defaults(
+            access_token=os.environ['RS_ACCESS_TOKEN']
+        )
