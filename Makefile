@@ -18,7 +18,6 @@ test-server: clean
 
 clean:
 	rm -rf dist build *.egg-info MANIFEST .tox .eggs
-	cd docs/ && $(MAKE) -f Makefile clean
 
 doc:
 	@echo 'building documentation'
